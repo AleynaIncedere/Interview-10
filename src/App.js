@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import './styles.css'; 
+import './styles.css';
+
 const ONE =
   "https://images.pexels.com/photos/2249528/pexels-photo-2249528.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 const TWO =
@@ -13,64 +14,60 @@ const FIVE =
 const SIX =
   "https://images.pexels.com/photos/4772874/pexels-photo-4772874.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
-const images = [ONE, TWO, THREE, FOUR, FIVE, SIX]; 
+const images = [ONE, TWO, THREE, FOUR, FIVE, SIX];
 
 function App() {
   return <Captcha />;
 }
 
 const Captcha = () => {
-  const [selectedImage, setSelectedImage] = useState(null); 
-  const [correctImage, setCorrectImage] = useState(null); 
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [correctImage, setCorrectImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [questionText, setQuestionText] = useState("");
 
-  
   const getRandomIndex = () => Math.floor(Math.random() * images.length);
 
-  
   const startCaptcha = () => {
     const randomImageIndex = getRandomIndex();
-    setCorrectImage(randomImageIndex); 
+    setCorrectImage(randomImageIndex);
+    setQuestionText(`Lütfen ${randomImageIndex + 1}. resmi seçin`); 
     setIsModalOpen(true);
     setErrorMessage(""); 
   };
 
   const handleImageSelect = (index) => {
     if (index === correctImage) {
-      
       alert("Başarıyla doğrulandı!");
-      setIsModalOpen(false); 
+      setIsModalOpen(false);
       setSelectedImage(null);
       setCorrectImage(null);
+      setQuestionText("");
     } else {
-     
       setErrorMessage("Yanlış seçim! Lütfen tekrar deneyin.");
     }
   };
 
   return (
     <div>
-    
       <button onClick={startCaptcha}>Captcha Başlat</button>
 
-     
       {isModalOpen && (
         <div style={modalStyle}>
           <div style={modalContentStyle}>
-            <h2>Doğru Resmi Seçin</h2>
+            <h2>{questionText}</h2> 
             <div style={imageContainerStyle}>
               {images.map((image, index) => (
                 <img
                   key={index}
                   src={image}
-                  alt={`Resim ${index + 1}`}
+                  alt={`Image ${index + 1}`}
                   style={imageStyle}
                   onClick={() => handleImageSelect(index)}
                 />
               ))}
             </div>
-          
             {errorMessage && <p style={errorMessageStyle}>{errorMessage}</p>}
           </div>
         </div>
@@ -78,7 +75,6 @@ const Captcha = () => {
     </div>
   );
 };
-
 
 const modalStyle = {
   position: "fixed",
@@ -92,14 +88,12 @@ const modalStyle = {
   alignItems: "center",
 };
 
-
 const modalContentStyle = {
   backgroundColor: "#fff",
   padding: "20px",
   borderRadius: "10px",
   textAlign: "center",
 };
-
 
 const imageContainerStyle = {
   display: "flex",
@@ -114,8 +108,8 @@ const imageStyle = {
   cursor: "pointer",
   borderRadius: "8px",
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  transition: "transform 0.2s", 
 };
-
 
 const errorMessageStyle = {
   color: "red",
